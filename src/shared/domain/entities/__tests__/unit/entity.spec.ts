@@ -1,5 +1,6 @@
 import { validate as uuidValidate } from 'uuid';
 import { Entity } from '../../entity';
+import { randomUUID } from 'node:crypto';
 
 type StubProps = {
   prop1: string;
@@ -7,6 +8,12 @@ type StubProps = {
 };
 
 class StubEntity extends Entity<StubProps> {}
+
+let id: string;
+
+beforeEach(() => {
+  id = randomUUID();
+});
 
 describe('Entity unit tests', () => {
   it('Should set props and id', () => {
@@ -21,7 +28,6 @@ describe('Entity unit tests', () => {
 
   it('Should accept a valid uuid', () => {
     const props = { prop1: 'value1', prop2: 15 };
-    const id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
     const entity = new StubEntity(props, id);
 
     expect(uuidValidate(entity._id)).toBeTruthy();
@@ -30,7 +36,6 @@ describe('Entity unit tests', () => {
 
   it('Should convert entity to JSON', () => {
     const props = { prop1: 'value1', prop2: 15 };
-    const id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
     const entity = new StubEntity(props, id);
 
     expect(entity.toJSON()).toStrictEqual({
