@@ -1,4 +1,4 @@
-import { ClassValidatorFields } from '../../class-validator-field';
+import { ClassValidatorFields } from '../../zod-validator-field';
 import * as libClassValidator from 'class-validator';
 
 class StubClassValidatorFields extends ClassValidatorFields<{

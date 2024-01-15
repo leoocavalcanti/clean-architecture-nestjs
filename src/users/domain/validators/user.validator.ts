@@ -1,11 +1,11 @@
 import { UserProps } from '../entities/user.entity';
-import { ClassValidatorFields } from '../../../shared/domain/validators/class-validator-field';
-import { z } from 'zod';
+import { ZodValidatorFields } from '../../../shared/domain/validators/zod-validator-field';
+import { ZodSchema, z } from 'zod';
 
 export const userSchema = z.object({
-  name: z.string().max(255),
-  email: z.string().email().max(255),
-  password: z.string().max(100),
+  name: z.string().trim().min(3).max(255),
+  email: z.string().trim().email().max(100),
+  password: z.string().trim().min(6).max(50),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -28,9 +28,9 @@ export class UserRules implements UserSchema {
   }
 }
 
-export class UserValidator extends ClassValidatorFields<UserRules> {
-  validate(data: UserProps): boolean {
-    return super.validate(new UserRules(data ?? ({} as UserProps)));
+export class UserValidator extends ZodValidatorFields<UserRules> {
+  validate(data: UserProps, schema: ZodSchema): boolean {
+    return super.validate(new UserRules(data ?? ({} as UserProps)), schema);
   }
 }
 

@@ -1,5 +1,6 @@
 import { UserEntity, UserProps } from '../../user.entity';
 import { UserDataBuilder } from '../../testing/helpers/user-data-builder';
+import { userSchema } from '../../../validators/user.validator';
 
 describe('UserEntity unit tests', () => {
   let props: UserProps;
@@ -8,7 +9,7 @@ describe('UserEntity unit tests', () => {
   beforeEach(() => {
     props = UserDataBuilder({});
 
-    sut = new UserEntity(props);
+    sut = new UserEntity(props, userSchema);
   });
 
   it('Constructor method', () => {
@@ -56,12 +57,12 @@ describe('UserEntity unit tests', () => {
   });
 
   it('Should update a user', () => {
-    sut.updateName('new name');
+    sut.updateName('new name', userSchema);
     expect(sut.props.name).toEqual('new name');
   });
 
   it('Should update a user password', () => {
-    sut.updatePassword('new password');
+    sut.updatePassword('new password', userSchema);
     expect(sut.props.password).toEqual('new password');
   });
 });
