@@ -14,13 +14,9 @@ export type UserSchema = z.infer<typeof userSchema>;
 
 export class UserRules implements UserSchema {
   name: string;
-
   email: string;
-
   password: string;
-
   createdAt: Date;
-
   updatedAt: Date;
 
   constructor({ email, name, password, createdAt, updatedAt }: UserProps) {

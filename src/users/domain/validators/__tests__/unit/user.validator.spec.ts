@@ -5,12 +5,22 @@ import {
   userSchema,
 } from '../../user.validator';
 import { UserDataBuilder } from '../../../entities/testing/helpers/user-data-builder';
+import { UserProps } from '../../../entities/user.entity';
 
 let sut: UserValidator;
+let props: UserProps;
 
 describe('UserValidator unit tests', () => {
   beforeEach(() => {
     sut = UserValidatorFactory.create();
+    props = UserDataBuilder({});
+  });
+
+  it('Valid case for user validator class', () => {
+    const props = UserDataBuilder({});
+    const isValid = sut.validate(props, userSchema);
+    expect(isValid).toBeTruthy();
+    expect(sut.validatedData).toStrictEqual(new UserRules(props));
   });
 
   describe('Name field', () => {
@@ -23,7 +33,6 @@ describe('UserValidator unit tests', () => {
         { validation: 'password', message: 'Required' },
       ]);
 
-      const props = UserDataBuilder({});
       isValid = sut.validate({ ...props, name: '' }, userSchema);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
@@ -51,13 +60,6 @@ describe('UserValidator unit tests', () => {
         },
       ]);
     });
-
-    it('Valid case for name field', () => {
-      const props = UserDataBuilder({});
-      const isValid = sut.validate(props, userSchema);
-      expect(isValid).toBeTruthy();
-      expect(sut.validatedData).toStrictEqual(new UserRules(props));
-    });
   });
   describe('Email field', () => {
     it('Invalidation cases for email field', () => {
@@ -69,7 +71,6 @@ describe('UserValidator unit tests', () => {
         { validation: 'password', message: 'Required' },
       ]);
 
-      const props = UserDataBuilder({});
       isValid = sut.validate({ ...props, email: '' }, userSchema);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
@@ -82,12 +83,79 @@ describe('UserValidator unit tests', () => {
         { validation: 'email', message: 'Expected string, received number' },
       ]);
     });
+  });
+  describe('Password field', () => {
+    it('Invalidation cases for password field', () => {
+      let isValid = sut.validate(null as any, userSchema);
+      expect(isValid).toBeFalsy();
+      expect(sut.errors).toStrictEqual([
+        { validation: 'name', message: 'Required' },
+        { validation: 'email', message: 'Required' },
+        { validation: 'password', message: 'Required' },
+      ]);
 
-    it('Valid case for email field', () => {
-      const props = UserDataBuilder({});
-      const isValid = sut.validate(props, userSchema);
-      expect(isValid).toBeTruthy();
-      expect(sut.validatedData).toStrictEqual(new UserRules(props));
+      isValid = sut.validate({ ...props, password: '' }, userSchema);
+      expect(isValid).toBeFalsy();
+      expect(sut.errors).toStrictEqual([
+        {
+          validation: 'password',
+          message: 'String must contain at least 6 character(s)',
+        },
+      ]);
+
+      isValid = sut.validate(
+        { ...props, password: 'a'.repeat(51) },
+        userSchema,
+      );
+      expect(isValid).toBeFalsy();
+      expect(sut.errors).toStrictEqual([
+        {
+          validation: 'password',
+          message: 'String must contain at most 50 character(s)',
+        },
+      ]);
+    });
+  });
+
+  describe('CreatedAt field', () => {
+    it('Invalidation cases for createdAt field', () => {
+      let isValid = sut.validate(
+        { ...props, createdAt: 10 } as any,
+        userSchema,
+      );
+
+      expect(isValid).toBeFalsy();
+      expect(sut.errors).toStrictEqual([
+        { validation: 'createdAt', message: 'Expected date, received number' },
+      ]);
+
+      isValid = sut.validate({ ...props, createdAt: '10' } as any, userSchema);
+
+      expect(isValid).toBeFalsy();
+      expect(sut.errors).toStrictEqual([
+        { validation: 'createdAt', message: 'Expected date, received string' },
+      ]);
+    });
+  });
+
+  describe('UpdatedAt field', () => {
+    it('Invalidation cases for updatedAt field', () => {
+      let isValid = sut.validate(
+        { ...props, updatedAt: 10 } as any,
+        userSchema,
+      );
+
+      expect(isValid).toBeFalsy();
+      expect(sut.errors).toStrictEqual([
+        { validation: 'updatedAt', message: 'Expected date, received number' },
+      ]);
+
+      isValid = sut.validate({ ...props, updatedAt: '10' } as any, userSchema);
+
+      expect(isValid).toBeFalsy();
+      expect(sut.errors).toStrictEqual([
+        { validation: 'updatedAt', message: 'Expected date, received string' },
+      ]);
     });
   });
 });
