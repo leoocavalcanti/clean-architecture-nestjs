@@ -1,6 +1,7 @@
 import { ZodSchema } from 'zod';
 import { Entity } from '../../../shared/domain/entities/entity';
 import { UserValidatorFactory } from '../validators/user.validator';
+import { EntityValidationError } from '../../../shared/domain/errors/validation-error';
 
 export type UserProps = {
   name: string;
@@ -62,6 +63,10 @@ export class UserEntity extends Entity<UserProps> {
 
   static validate(props: UserProps, schema: ZodSchema) {
     const validator = UserValidatorFactory.create();
-    validator.validate(props, schema);
+    const isValid = validator.validate(props, schema);
+
+    if (!isValid) {
+      throw new EntityValidationError(validator.errors);
+    }
   }
 }
