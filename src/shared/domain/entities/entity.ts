@@ -12,7 +12,7 @@ export abstract class Entity<Props = any> {
   }
 
   get id() {
-    return this.id;
+    return this._id;
   }
 
   toJSON(): Required<{ id: string } & Props> {

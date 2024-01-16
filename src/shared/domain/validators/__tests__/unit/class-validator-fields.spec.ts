@@ -1,6 +1,6 @@
-import * as libClassValidator from 'class-validator';
 import { ZodValidatorFields } from '../../zod-validator-field';
 import { userSchema } from '../../../../../users/domain/validators/user.validator';
+import { z } from 'zod';
 
 class StubClassValidatorFields extends ZodValidatorFields<{
   field: string;
@@ -19,31 +19,21 @@ describe('ClassValidatorFields unit tests', () => {
   });
 
   it('Should validate with errors', () => {
-    const spyValidateSync = jest
-      .spyOn(libClassValidator, 'validateSync')
-      .mockReturnValueOnce([
-        {
-          property: 'field',
-          constraints: {
-            isNotEmpty: 'field is required',
-          },
-        },
-      ]);
-
     expect(sut.validate(null, userSchema)).toBeFalsy();
-    expect(spyValidateSync).toHaveBeenCalled();
     expect(sut.validatedData).toBeNull();
-    expect(sut.errors).toStrictEqual({ field: ['field is required'] });
+    expect(sut.errors).toStrictEqual([
+      { validation: '', message: 'Expected object, received null' },
+    ]);
   });
 
   it('Should validate without errors', () => {
-    const spyValidateSync = jest
-      .spyOn(libClassValidator, 'validateSync')
-      .mockReturnValueOnce([]);
+    const mockSchema = z.object({
+      field: z.string(),
+    });
 
-    expect(sut.validate({ field: 'value' }, userSchema)).toBeFalsy();
-    expect(spyValidateSync).toHaveBeenCalled();
+    expect(sut.validate({ field: 'value' }, mockSchema)).toBeTruthy();
     expect(sut.validatedData).toStrictEqual({ field: 'value' });
+    console.log(sut.validatedData);
     expect(sut.errors).toBe(null);
   });
 });
