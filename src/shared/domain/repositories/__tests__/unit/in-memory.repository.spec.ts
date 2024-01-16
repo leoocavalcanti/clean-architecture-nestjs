@@ -67,4 +67,15 @@ describe('InMemoryRepository unit tests', () => {
 
     expect(entityUpdated.toJSON()).toStrictEqual(sut.items[0].toJSON());
   });
+
+  it('Should delete an entity', async () => {
+    const entity = new StubEntity({ name: 'name', price: 10 });
+    await sut.save(entity);
+
+    expect(sut.items).toHaveLength(1);
+
+    await sut.deleteById(entity._id);
+
+    expect(sut.items).toHaveLength(0);
+  });
 });
