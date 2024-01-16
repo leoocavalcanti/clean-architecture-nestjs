@@ -1,7 +1,8 @@
-import { ClassValidatorFields } from '../../zod-validator-field';
 import * as libClassValidator from 'class-validator';
+import { ZodValidatorFields } from '../../zod-validator-field';
+import { userSchema } from '../../../../../users/domain/validators/user.validator';
 
-class StubClassValidatorFields extends ClassValidatorFields<{
+class StubClassValidatorFields extends ZodValidatorFields<{
   field: string;
 }> {}
 
@@ -29,7 +30,7 @@ describe('ClassValidatorFields unit tests', () => {
         },
       ]);
 
-    expect(sut.validate(null)).toBeFalsy();
+    expect(sut.validate(null, userSchema)).toBeFalsy();
     expect(spyValidateSync).toHaveBeenCalled();
     expect(sut.validatedData).toBeNull();
     expect(sut.errors).toStrictEqual({ field: ['field is required'] });
@@ -40,7 +41,7 @@ describe('ClassValidatorFields unit tests', () => {
       .spyOn(libClassValidator, 'validateSync')
       .mockReturnValueOnce([]);
 
-    expect(sut.validate({ field: 'value' })).toBeTruthy();
+    expect(sut.validate({ field: 'value' }, userSchema)).toBeFalsy();
     expect(spyValidateSync).toHaveBeenCalled();
     expect(sut.validatedData).toStrictEqual({ field: 'value' });
     expect(sut.errors).toBe(null);

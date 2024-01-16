@@ -25,7 +25,7 @@ export class UserRules implements UserSchema {
 }
 
 export class UserValidator extends ZodValidatorFields<UserRules> {
-  validate(data: UserProps, schema: ZodSchema): boolean {
+  validate(data: UserProps, schema: ZodSchema = userSchema): boolean {
     return super.validate(new UserRules(data ?? ({} as UserProps)), schema);
   }
 }

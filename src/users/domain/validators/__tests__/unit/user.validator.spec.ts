@@ -2,7 +2,6 @@ import {
   UserRules,
   UserValidator,
   UserValidatorFactory,
-  userSchema,
 } from '../../user.validator';
 import { UserDataBuilder } from '../../../entities/testing/helpers/user-data-builder';
 import { UserProps } from '../../../entities/user.entity';
@@ -18,14 +17,14 @@ describe('UserValidator unit tests', () => {
 
   it('Valid case for user validator class', () => {
     const props = UserDataBuilder({});
-    const isValid = sut.validate(props, userSchema);
+    const isValid = sut.validate(props);
     expect(isValid).toBeTruthy();
     expect(sut.validatedData).toStrictEqual(new UserRules(props));
   });
 
   describe('Name field', () => {
     it('Invalidation cases for name field', () => {
-      let isValid = sut.validate(null as any, userSchema);
+      let isValid = sut.validate(null as any);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'name', message: 'Required' },
@@ -33,7 +32,7 @@ describe('UserValidator unit tests', () => {
         { validation: 'password', message: 'Required' },
       ]);
 
-      isValid = sut.validate({ ...props, name: '' }, userSchema);
+      isValid = sut.validate({ ...props, name: '' });
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         {
@@ -42,16 +41,13 @@ describe('UserValidator unit tests', () => {
         },
       ]);
 
-      isValid = sut.validate({ ...props, name: 0 } as any, userSchema);
+      isValid = sut.validate({ ...props, name: 0 } as any);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'name', message: 'Expected string, received number' },
       ]);
 
-      isValid = sut.validate(
-        { ...props, name: 'a'.repeat(256) } as any,
-        userSchema,
-      );
+      isValid = sut.validate({ ...props, name: 'a'.repeat(256) } as any);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         {
@@ -63,7 +59,7 @@ describe('UserValidator unit tests', () => {
   });
   describe('Email field', () => {
     it('Invalidation cases for email field', () => {
-      let isValid = sut.validate(null as any, userSchema);
+      let isValid = sut.validate(null as any);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'name', message: 'Required' },
@@ -71,13 +67,13 @@ describe('UserValidator unit tests', () => {
         { validation: 'password', message: 'Required' },
       ]);
 
-      isValid = sut.validate({ ...props, email: '' }, userSchema);
+      isValid = sut.validate({ ...props, email: '' });
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'email', message: 'Invalid email' },
       ]);
 
-      isValid = sut.validate({ ...props, email: 0 } as any, userSchema);
+      isValid = sut.validate({ ...props, email: 0 } as any);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'email', message: 'Expected string, received number' },
@@ -86,7 +82,7 @@ describe('UserValidator unit tests', () => {
   });
   describe('Password field', () => {
     it('Invalidation cases for password field', () => {
-      let isValid = sut.validate(null as any, userSchema);
+      let isValid = sut.validate(null as any);
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'name', message: 'Required' },
@@ -94,7 +90,7 @@ describe('UserValidator unit tests', () => {
         { validation: 'password', message: 'Required' },
       ]);
 
-      isValid = sut.validate({ ...props, password: '' }, userSchema);
+      isValid = sut.validate({ ...props, password: '' });
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         {
@@ -103,10 +99,7 @@ describe('UserValidator unit tests', () => {
         },
       ]);
 
-      isValid = sut.validate(
-        { ...props, password: 'a'.repeat(51) },
-        userSchema,
-      );
+      isValid = sut.validate({ ...props, password: 'a'.repeat(51) });
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         {
@@ -119,17 +112,14 @@ describe('UserValidator unit tests', () => {
 
   describe('CreatedAt field', () => {
     it('Invalidation cases for createdAt field', () => {
-      let isValid = sut.validate(
-        { ...props, createdAt: 10 } as any,
-        userSchema,
-      );
+      let isValid = sut.validate({ ...props, createdAt: 10 } as any);
 
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'createdAt', message: 'Expected date, received number' },
       ]);
 
-      isValid = sut.validate({ ...props, createdAt: '10' } as any, userSchema);
+      isValid = sut.validate({ ...props, createdAt: '10' } as any);
 
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
@@ -140,17 +130,14 @@ describe('UserValidator unit tests', () => {
 
   describe('UpdatedAt field', () => {
     it('Invalidation cases for updatedAt field', () => {
-      let isValid = sut.validate(
-        { ...props, updatedAt: 10 } as any,
-        userSchema,
-      );
+      let isValid = sut.validate({ ...props, updatedAt: 10 } as any);
 
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([
         { validation: 'updatedAt', message: 'Expected date, received number' },
       ]);
 
-      isValid = sut.validate({ ...props, updatedAt: '10' } as any, userSchema);
+      isValid = sut.validate({ ...props, updatedAt: '10' } as any);
 
       expect(isValid).toBeFalsy();
       expect(sut.errors).toStrictEqual([

@@ -1,6 +1,5 @@
 import { UserEntity, UserProps } from '../../user.entity';
 import { UserDataBuilder } from '../../testing/helpers/user-data-builder';
-import { userSchema } from '../../../validators/user.validator';
 
 describe('UserEntity unit tests', () => {
   let props: UserProps;
@@ -9,7 +8,7 @@ describe('UserEntity unit tests', () => {
   beforeEach(() => {
     UserEntity.validate = jest.fn();
     props = UserDataBuilder({});
-    sut = new UserEntity(props, userSchema);
+    sut = new UserEntity(props);
   });
 
   it('Constructor method', () => {
@@ -59,13 +58,13 @@ describe('UserEntity unit tests', () => {
 
   it('Should update a user', () => {
     expect(UserEntity.validate).toHaveBeenCalled();
-    sut.updateName('new name', userSchema);
+    sut.updateName('new name');
     expect(sut.props.name).toEqual('new name');
   });
 
   it('Should update a user password', () => {
     expect(UserEntity.validate).toHaveBeenCalled();
-    sut.updatePassword('new password', userSchema);
+    sut.updatePassword('new password');
     expect(sut.props.password).toEqual('new password');
   });
 });

@@ -1,6 +1,6 @@
 import { ZodSchema } from 'zod';
 import { Entity } from '../../../shared/domain/entities/entity';
-import { UserValidatorFactory } from '../validators/user.validator';
+import { UserValidatorFactory, userSchema } from '../validators/user.validator';
 import { EntityValidationError } from '../../../shared/domain/errors/validation-error';
 
 export type UserProps = {
@@ -14,21 +14,20 @@ export type UserProps = {
 export class UserEntity extends Entity<UserProps> {
   constructor(
     public readonly props: UserProps,
-    public readonly schema: ZodSchema,
     id?: string,
   ) {
-    UserEntity.validate(props, schema);
-    super(props, id, schema);
+    UserEntity.validate(props, userSchema);
+    super(props, id, userSchema);
     this.props.createdAt = this.props.createdAt ?? new Date();
     this.props.updatedAt = this.props.updatedAt ?? new Date();
   }
 
-  updateName(value: string, schema: ZodSchema) {
+  updateName(value: string, schema: ZodSchema = userSchema) {
     UserEntity.validate({ ...this.props, name: value }, schema);
     this.name = value;
   }
 
-  updatePassword(value: string, schema: ZodSchema) {
+  updatePassword(value: string, schema: ZodSchema = userSchema) {
     UserEntity.validate({ ...this.props, password: value }, schema);
     this.password = value;
   }
@@ -61,7 +60,7 @@ export class UserEntity extends Entity<UserProps> {
     return this.props.updatedAt;
   }
 
-  static validate(props: UserProps, schema: ZodSchema) {
+  static validate(props: UserProps, schema: ZodSchema = userSchema) {
     const validator = UserValidatorFactory.create();
     const isValid = validator.validate(props, schema);
 
