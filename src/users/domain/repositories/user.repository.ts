@@ -1,4 +1,4 @@
-import { SearchableRepositoryInterface } from '../../../shared/domain/repositories/searchable-repository-contracts.ts';
+import { SearchableRepositoryInterface } from '../../../shared/domain/repositories/searchable-repository-contracts';
 import { UserEntity } from '../entities/user.entity';
 
 export interface UserRepository
